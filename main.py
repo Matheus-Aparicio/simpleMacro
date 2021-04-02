@@ -15,8 +15,8 @@ class Main:
 
     def end(self):
         while self.macro.macroAtivo:
-            self.macro.holdW(self.macro.tempo)
-            pyautogui.press('enter')
+            self.macro.click_mouse(20, 'right')
+            pyautogui.leftClick()
 
 
 main = Main()
