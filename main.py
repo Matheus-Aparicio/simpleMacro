@@ -1,66 +1,46 @@
-import pyautogui
-import time
 import easygui
+from macro import Macro
 from pynput.keyboard import Key, Listener
+import pyautogui
 
-class Macro:
+
+class Main:
 
     def __init__(self):
-        self.__macroAtivo = False
-        self.__tempoPequeno = 5
-        self.__tempoMedio = 10
-        self.__tempoGrande = 15
-        self.__tempoAndar = 20
+        self.macro = Macro()
 
-        self.__contadorPequeno = 0
-        self.__contadorMedio = 0
-        self.__contadorGrande = 0
+    def start(self):
+        easygui.msgbox("Aperte H para ativar ou desativar o macro.\n"
+                       "O macro será ativado após 5 segundos.", title="Instruções")
 
-    @property
-    def macroAtivo(self):
-        return self.__macroAtivo
+    def end(self):
+        while self.macro.macroAtivo:
+            self.macro.holdW(self.macro.tempo)
+            pyautogui.press('enter')
 
-    @macroAtivo.setter
-    def macroAtivo(self, ativo: bool):
-        self.__macroAtivo = ativo
 
-    @property
-    def tempoPequeno(self):
-        return self.__tempoPequeno
+main = Main()
+main.start()
 
-    @property
-    def tempoMedio(self):
-        return self.__tempoMedio
 
-    @property
-    def tempoGrande(self):
-        return self.__tempoGrande
+def on_press(key):
+    if 'char' in dir(key):  # check if char method exists,
+        if key.char == 'h':  # check if it is 'q' key
+            main.macro.macroAtivo = True
+            return False
 
-    @property
-    def tempoAndar(self):
-        return self.__tempoAndar
 
-    @property
-    def contadorPequeno(self):
-        return self.__contadorPequeno
+def on_release(key):
+    pass
 
-    @contadorPequeno.setter
-    def contadorPequeno(self, numero: int):
-        self.__contadorPequeno = numero
 
-    @property
-    def contadorMedio(self):
-        return self.__contadorMedio
+with Listener(
+        on_press=on_press,
+        on_release=on_release) as listener:
+    listener.join()
 
-    @contadorMedio.setter
-    def contadorMedio(self, numero: int):
-        self.__contadorMedio = numero
+main.end()
 
-    @property
-    def contadorGrande(self):
-        return self.__contadorGrande
 
-    @contadorGrande.setter
-    def contadorGrande(self, numero: int):
-        self.__contadorGrande = numero
+
 
