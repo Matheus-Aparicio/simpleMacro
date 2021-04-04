@@ -1,31 +1,50 @@
-import easygui
 from macro import Macro
 from pynput.keyboard import Key, Listener
-import pyautogui
+import time
+from interface import Layout
 
 
 class Main:
 
     def __init__(self):
         self.macro = Macro()
+        self.layout = Layout()
+        self.timer = 0
 
-    def start(self):
-        easygui.msgbox("Aperte H para ativar ou desativar o macro.\n"
-                       "O macro será ativado após 5 segundos.", title="Instruções")
+    def startLayout(self):
+        self.layout.run()
 
-    def end(self):
+    def run(self):
+        time.sleep(int(self.layout.values['delayInit']))
         while self.macro.macroAtivo:
-            self.macro.click_mouse(20, 'right')
-            pyautogui.leftClick()
+            try:
+                if self.layout.values['key2'] == "":
+                    self.macro.press_key(int(self.layout.values['duration1']), self.layout.values['key1'],
+                                         int(self.layout.values['delay1']))
+                elif self.layout.values['key1'] == "":
+                    self.macro.press_key(int(self.layout.values['duration1']), self.layout.values['key2'],
+                                         int(self.layout.values['delay1']))
+                else:
+                    self.macro.press_two_keys(int(self.layout.values['duration1']), self.layout.values['key1'],
+                                         self.layout.values['key2'], int(self.layout.values['delay1']))
+
+                if self.layout.values['mouseButton'] != 'nenhum':
+                    self.macro.click_mouse(int(self.layout.values['duration3']), self.layout.values['mouseButton'],
+                                           int(self.layout.values['delay3']))
+
+                break
+
+            except:
+                pass
 
 
 main = Main()
-main.start()
+main.startLayout()
 
 
 def on_press(key):
     if 'char' in dir(key):  # check if char method exists,
-        if key.char == 'h':  # check if it is 'q' key
+        if key.char == main.layout.values['keyInit1']:
             main.macro.macroAtivo = True
             return False
 
@@ -39,7 +58,7 @@ with Listener(
         on_release=on_release) as listener:
     listener.join()
 
-main.end()
+main.run()
 
 
 
