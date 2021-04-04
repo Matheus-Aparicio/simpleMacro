@@ -1,7 +1,7 @@
 from macro import Macro
 from pynput.keyboard import Key, Listener
 import time
-from interface import Layout
+from layout import Layout
 
 
 class Main:
