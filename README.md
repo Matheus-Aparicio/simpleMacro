@@ -1,2 +1,2 @@
 # simpleMacro
-Software de macro que visa ser livre, intuitivo e eficiente.
+Software de macro feito para praticar alguns conceitos de Python.
